@@ -22,5 +22,7 @@ public interface IXMLService {
     public static final String PARTIDO_ATT_ID = "id";
 
      ArrayList<Partido> leerPartidos(String ruta, float umbral) throws LecturaException;
+     
+     //Crear una clase de esa Interfaz
 
 }
