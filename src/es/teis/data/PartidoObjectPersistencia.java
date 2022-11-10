@@ -5,8 +5,9 @@
 package es.teis.data;
 
 import es.teis.model.Partido;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
@@ -18,32 +19,20 @@ public class PartidoObjectPersistencia implements IPersistencia {
 
     @Override
     public void escribir(ArrayList<Partido> partidos, String ruta) {
-        FileOutputStream fos=null; 
-        long longitudBytes = 0;
+        for(Partido partido:partidos){
         if (partidos != null) {
             
-            try (
-                ObjectOutputStream oos = new ObjectOutputStream(ruta);
-                        new FileOutputStream(fos)); 
-                longitudBytes = raf.length();
-                raf.seek(longitudBytes);
-                for (Persona persona : personas) {
-
-                    raf.writeLong(persona.getId());
-                    StringBuilder sb = new StringBuilder(persona.getDni());
-                    sb.setLength(Persona.MAX_LENGTH_DNI);
-                    raf.writeChars(sb.toString());
-
-                    sb = new StringBuilder(persona.getNombre());
-                    sb.setLength(Persona.MAX_LENGTH_NOMBRE);
-                    raf.writeChars(sb.toString());
-
-                    raf.writeInt(persona.getEdad());
-                    raf.writeFloat(persona.getSalario());
-
-                    raf.writeBoolean(persona.isBorrado());
-
-                }
+            try (FileOutputStream fos= new FileOutputStream(ruta,true);) {
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                
+                oos.writeLong(partido.getId());
+                
+                String sb = partido.getNombre();
+                oos.writeChars(sb);
+                
+                oos.writeInt(partido.getVotos());
+                
+                oos.writeFloat(partido.getPorcentaje());
 
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
@@ -55,7 +44,7 @@ public class PartidoObjectPersistencia implements IPersistencia {
         }
 
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    }}
 
     @Override
     public ArrayList<Partido> leerTodo(String ruta) {
